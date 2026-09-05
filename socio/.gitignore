@@ -1,0 +1,99 @@
+# ================================================================================================
+# ECOMAP SOCIO - GITIGNORE PARA MÁXIMA SEGURIDAD
+# ================================================================================================
+
+# ---- ARCHIVOS DE CREDENCIALES (CRÍTICO) ----
+local.properties
+*.env
+*.env.local
+*.env.production
+*.env.development
+**/secrets/**
+**/credentials/**
+google-services.json
+firebase-adminsdk-*.json
+service-account.json
+
+# ---- KEYSTORES Y CERTIFICADOS ----
+*.jks
+*.keystore
+release.keystore
+debug.keystore
+*.p12
+*.pem
+*.key
+*.cert
+*.crt
+
+# ---- ARCHIVOS SENSIBLES ----
+**/config/production.json
+**/config/secrets.json
+database.db
+*.sql
+
+# ---- ANDROID STUDIO / INTELLIJ ----
+*.iml
+.gradle
+.idea/
+/local.properties
+/.idea/workspace.xml
+/.idea/tasks.xml
+/.idea/gradle.xml
+/.idea/assetWizardSettings.xml
+/.idea/dictionaries
+/.idea/libraries
+/.idea/caches
+/.idea/modules.xml
+/.idea/navEditor.xml
+
+# ---- GRADLE ----
+.gradle/
+build/
+*/build/
+/captures
+.externalNativeBuild
+.cxx
+
+# ---- NDK ----
+obj/
+*.so
+
+# ---- ANDROID ----
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+
+# ---- LOGS ----
+*.log
+logcat.txt
+
+# ---- OS ESPECÍFICOS ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- BACKUPS ----
+*~
+*.bak
+*.swp
+*.swo
+
+# ---- ARCHIVOS TEMPORALES ----
+*.tmp
+*.temp
+.cache/
+
+# ---- DEPENDENCIAS ----
+node_modules/
+.pnp
+.pnp.js
+
+# ================================================================================================
+# FIN DE GITIGNORE
+# ================================================================================================
+.aider*

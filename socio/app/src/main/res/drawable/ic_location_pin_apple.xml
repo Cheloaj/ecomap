@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="64dp"
+    android:viewportWidth="48"
+    android:viewportHeight="64">
+
+    <!-- Sombra del pin -->
+    <path
+        android:pathData="M24,60 C18,60 12,58 8,56 C12,58 18,60 24,60 C30,60 36,58 40,56 C36,58 30,60 24,60 Z"
+        android:fillColor="#33000000" />
+
+    <!-- Forma principal del pin (gota roja) -->
+    <path
+        android:pathData="M24,2 C14,2 6,10 6,20 C6,32 24,54 24,54 C24,54 42,32 42,20 C42,10 34,2 24,2 Z"
+        android:fillColor="#FF3B30" />
+
+    <!-- Punto interior blanco -->
+    <path
+        android:pathData="M24,12 C19,12 15,16 15,21 C15,26 19,30 24,30 C29,30 33,26 33,21 C33,16 29,12 24,12 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Punto negro central -->
+    <path
+        android:pathData="M24,18 C22,18 21,19.5 21,21 C21,22.5 22,24 24,24 C26,24 27,22.5 27,21 C27,19.5 26,18 24,18 Z"
+        android:fillColor="#000000" />
+</vector>
