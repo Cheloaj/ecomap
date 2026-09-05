@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo verde -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/ic_launcher_background"/>
+        </shape>
+    </item>
+
+    <!-- Icono circular blanco en el centro -->
+    <item
+        android:width="64dp"
+        android:height="64dp"
+        android:gravity="center">
+        <vector
+            android:width="64dp"
+            android:height="64dp"
+            android:viewportWidth="108"
+            android:viewportHeight="108">
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M54,27c-14.9,0 -27,12.1 -27,27s12.1,27 27,27 27,-12.1 27,-27S68.9,27 54,27zM54,75c-11.6,0 -21,-9.4 -21,-21s9.4,-21 21,-21 21,9.4 21,21S65.6,75 54,75z"/>
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M54,42c-6.6,0 -12,5.4 -12,12s5.4,12 12,12 12,-5.4 12,-12S60.6,42 54,42zM54,60c-3.3,0 -6,-2.7 -6,-6s2.7,-6 6,-6 6,2.7 6,6S57.3,60 54,60z"/>
+        </vector>
+    </item>
+</layer-list>

@@ -1,0 +1,10 @@
+# Configuración local — NO se sube a Git (está en .gitignore)
+#
+# Copia este archivo como `local.properties` y rellena los valores.
+# Estas credenciales se inyectan en BuildConfig al compilar; sin ellas la app
+# compila igual pero falla en cada llamada de red, sin dar error de compilación.
+
+sdk.dir=RUTA_A_TU_ANDROID_SDK
+
+supabase.url=https://TU-PROYECTO.supabase.co
+supabase.key=TU_ANON_KEY
