@@ -9,10 +9,20 @@ Dos aplicaciones **Android nativas** en Kotlin y Jetpack Compose que conectan al
 
 Las dos comparten un mismo backend en Supabase (PostgreSQL).
 
+### EcoMap Socio
+
 <p align="center">
-  <img src="docs/img/socio-mis-negocios.png" width="240" alt="Lista de negocios" />
-  <img src="docs/img/socio-productos.png" width="240" alt="Inventario con ofertas" />
-  <img src="docs/img/socio-detalle-producto.png" width="240" alt="Detalle de producto" />
+  <img src="docs/img/socio-mis-negocios.png" width="235" alt="Lista de negocios del vendedor" />
+  <img src="docs/img/socio-productos.png" width="235" alt="Inventario con ofertas y calificaciones" />
+  <img src="docs/img/socio-detalle-producto.png" width="235" alt="Detalle de producto" />
+</p>
+
+### EcoMap Usuario
+
+<p align="center">
+  <img src="docs/img/usuario-mapa.png" width="235" alt="Mapa de negocios en Ciudad del Carmen" />
+  <img src="docs/img/usuario-canasta.png" width="235" alt="Canasta con total estimado" />
+  <img src="docs/img/usuario-menu.png" width="235" alt="Menú de navegación" />
 </p>
 
 ---
