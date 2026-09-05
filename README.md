@@ -125,4 +125,4 @@ Funcional y probado en dispositivo físico (ZTE 7060, Android 13). Pendiente: co
 
 ---
 
-Desarrollado por **Victor Hernández** · Ciudad del Carmen, Campeche
+Desarrollado por **Victor Manuel Narváez Hernández** · Ciudad del Carmen, Campeche
