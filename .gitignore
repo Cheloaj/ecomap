@@ -1,0 +1,38 @@
+# --- Credenciales (NUNCA subir) ---
+local.properties
+*.env
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+keystore.properties
+
+# --- Build ---
+build/
+.gradle/
+.kotlin/
+*.apk
+*.aab
+*.aar
+captures/
+
+# --- Android Studio / IntelliJ ---
+.idea/
+*.iml
+.navigation/
+.externalNativeBuild/
+.cxx/
+
+# --- Volcados de la JVM ---
+hs_err_pid*.log
+replay_pid*.log
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Node (panel de administración) ---
+node_modules/
+.next/
