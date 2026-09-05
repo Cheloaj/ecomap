@@ -50,7 +50,7 @@ docs/       Documentación técnica
 
 Sin servidor propio: las apps hablan directo con PostgREST, y la seguridad la sostienen las políticas de Row Level Security y funciones `SECURITY DEFINER`.
 
-**14 tablas** — `users`, `businesses`, `products`, `offers`, `scheduled_offers`, `notifications`, `product_ratings`, `product_complaints`, `product_reports`, `user_preferences`, `basket`, `favorites`, `user_history`, más la vista `product_rating_stats`.
+**13 tablas** — `users`, `businesses`, `products`, `offers`, `scheduled_offers`, `notifications`, `product_ratings`, `product_complaints`, `product_reports`, `user_preferences`, `basket`, `favorites` e `user_history` — más dos vistas: `product_rating_stats` y `subscription_stats`.
 
 **Realtime** en `users`, `businesses`, `products`, `notifications`, `offers` y `scheduled_offers`, para que un cambio de estado o una oferta nueva aparezcan sin recargar.
 

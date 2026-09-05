@@ -370,7 +370,8 @@ class AuthRepositoryImpl @Inject constructor(
      * consultara, y la anon key viaja dentro del APK: bastaba una petición para
      * leer el código de otra persona y apoderarse de su cuenta.
      *
-     * Ahora se manda correo + código al RPC y solo regresa si fue válido. El
+     * Ahora se manda correo + código al RPC, que responde únicamente si fue
+     * válido o no. El
      * código nunca sale de la base. El servidor también marca el correo como
      * verificado y activa la cuenta, porque el cliente ya no puede tocar
      * `account_status` (lo impide un trigger).

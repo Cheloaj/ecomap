@@ -52,7 +52,8 @@ GET /rest/v1/users?email=eq.victima@correo.com&select=verification_code
 ```
 
 **Corrección.** La comparación se movió a un RPC `SECURITY DEFINER`. El cliente envía
-correo y código, y solo recibe si fue válido: el código nunca sale de la base de datos.
+correo y código, y lo único que recibe de vuelta es si fue válido o no. El código
+nunca sale de la base de datos.
 
 ```sql
 CREATE FUNCTION validate_verification_code(email_param TEXT, code_param TEXT)
