@@ -38,6 +38,9 @@ fun SplashScreen(
     val currentUser by viewModel.currentUser.collectAsState()
     var navigationHandled by remember { mutableStateOf(false) }
     var isLoadingComplete by remember { mutableStateOf(false) }
+    // Evita reintentar el acceso directo en bucle si las credenciales guardadas
+    // ya no son válidas (por ejemplo, si la contraseña cambió desde otro equipo)
+    var autoLoginIntentado by remember { mutableStateOf(false) }
 
     // Cargar usuario
     LaunchedEffect(Unit) {
@@ -72,25 +75,67 @@ fun SplashScreen(
         Log.d("SplashScreen", "   savedCredentials: ${if (savedCredentials != null) "SÍ" else "NO"}")
         Log.d("SplashScreen", "   isBiometricEnrolled: $isBiometricEnrolled")
 
+        // El orden importa. Antes, la primera condición era "¿hay credenciales
+        // guardadas?", así que la app se detenía en QuickLogin a pedir la
+        // contraseña incluso cuando había una sesión válida restaurada y el
+        // teléfono NO tenía biometría configurada. Resultado: no se podía
+        // entrar sin volver a teclear la contraseña en cada arranque.
+        //
+        // Ahora se evalúa primero la sesión, y la pantalla de biometría solo
+        // aparece cuando el dispositivo realmente tiene huella o rostro dados
+        // de alta; si no los tiene, no aporta nada y solo estorba.
         when {
-            // PRIORIDAD 1: QUICKLOGIN (Face ID / Auto-Login)
-            savedCredentials != null -> {
-                val (email, password, fullName) = savedCredentials
-                val displayName = getFirstName(fullName)
-
-                Log.d("SplashScreen", "🔐 Credenciales guardadas → QuickLogin")
-                navigationHandled = true
-                onNavigateToQuickLogin(email, password, displayName, shouldAutoLaunchBiometric)
-            }
-
-            // PRIORIDAD 2: SESIÓN ACTIVA (Si el usuario ya pasó el QuickLogin o usó login manual)
+            // PRIORIDAD 1: SESIÓN ACTIVA → entrar directo
             user != null -> {
                 Log.d("SplashScreen", "✅ Sesión activa → Main")
                 navigationHandled = true
                 onNavigateToMain()
             }
 
-            // PRIORIDAD 3: SIN NADA → WELCOME
+            // PRIORIDAD 2: CREDENCIALES + BIOMETRÍA DISPONIBLE → pedir rostro/huella
+            savedCredentials != null && isBiometricEnrolled -> {
+                val (email, password, fullName) = savedCredentials
+                val displayName = getFirstName(fullName)
+
+                Log.d("SplashScreen", "🔐 Biometría disponible → QuickLogin")
+                navigationHandled = true
+                onNavigateToQuickLogin(email, password, displayName, true)
+            }
+
+            // PRIORIDAD 3: CREDENCIALES SIN BIOMETRÍA → acceso directo
+            // Sin huella ni rostro dados de alta, pedir la contraseña otra vez
+            // no añade seguridad: las credenciales ya están en el almacén
+            // cifrado del dispositivo. Se inicia sesión en silencio y, cuando
+            // llegue el usuario, este mismo efecto vuelve a correr y entra por
+            // la PRIORIDAD 1.
+            savedCredentials != null && !autoLoginIntentado -> {
+                val (email, password, fullName) = savedCredentials
+                Log.d("SplashScreen", "🔓 Sin biometría configurada → acceso directo")
+                autoLoginIntentado = true
+                viewModel.signIn(email, password)
+
+                // Se espera el resultado aquí mismo. Si se dejara al efecto
+                // volver a dispararse, un inicio de sesión fallido no cambiaría
+                // currentUser y la pantalla se quedaría en el splash para siempre.
+                var esperado = 0L
+                while (viewModel.currentUser.value == null && esperado < 8_000L) {
+                    delay(200)
+                    esperado += 200
+                }
+
+                navigationHandled = true
+                if (viewModel.currentUser.value != null) {
+                    Log.d("SplashScreen", "✅ Acceso directo correcto → Main")
+                    onNavigateToMain()
+                } else {
+                    // Credenciales caducadas o contraseña cambiada desde otro
+                    // equipo: se pide a mano.
+                    Log.d("SplashScreen", "⚠️ Acceso directo falló → QuickLogin")
+                    onNavigateToQuickLogin(email, password, getFirstName(fullName), false)
+                }
+            }
+
+            // PRIORIDAD 4: SIN NADA → WELCOME
             else -> {
                 Log.d("SplashScreen", "❌ Primera vez → Welcome")
                 navigationHandled = true

@@ -47,6 +47,10 @@ fun CommunityProductBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
+                // navigationBarsPadding(): sin esto el final del contenido
+                // (nombre y precio del producto) queda debajo de la barra de
+                // navegación del sistema y se ve cortado.
+                .navigationBarsPadding()
                 .padding(bottom = 32.dp)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(16.dp)

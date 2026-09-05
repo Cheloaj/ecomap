@@ -487,6 +487,8 @@ private fun ModernClusterBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                // Deja aire para la barra de navegación del sistema
+                .navigationBarsPadding()
                 .padding(24.dp)
         ) {
             Text(
