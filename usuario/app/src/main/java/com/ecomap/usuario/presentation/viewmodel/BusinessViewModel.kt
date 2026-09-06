@@ -10,11 +10,13 @@ import com.ecomap.usuario.domain.repository.BusinessRepository
 import com.ecomap.usuario.domain.repository.ReportRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.realtime.PostgresAction
 import io.github.jan.supabase.realtime.channel
 import io.github.jan.supabase.realtime.postgresChangeFlow
 import io.github.jan.supabase.realtime.realtime
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,10 +70,31 @@ class BusinessViewModel @Inject constructor(
     val selectedBusiness: StateFlow<Business?> = _selectedBusiness.asStateFlow()
 
     init {
-        loadAllBusinesses()
-        loadAllOffers()
-        subscribeToBusinessChanges()
-        subscribeToProductChanges()
+        viewModelScope.launch {
+            // Supabase restaura la sesión desde el almacenamiento de forma
+            // asíncrona al arrancar. Si se consultaba de inmediato, la petición
+            // salía como "anon" y el servidor la rechazaba con
+            // "permission denied", dejando un error en pantalla que ya no se
+            // recuperaba aunque la sesión llegara medio segundo después.
+            esperarSesion()
+            loadAllBusinesses()
+            loadAllOffers()
+            subscribeToBusinessChanges()
+            subscribeToProductChanges()
+        }
+    }
+
+    /**
+     * Espera a que la sesión quede disponible, con un tope de 5 segundos.
+     * Si al agotarse no hay sesión, se continúa igualmente: la pantalla mostrará
+     * el estado vacío en vez de quedarse cargando para siempre.
+     */
+    private suspend fun esperarSesion(timeoutMs: Long = 5_000) {
+        var esperado = 0L
+        while (supabase.auth.currentUserOrNull() == null && esperado < timeoutMs) {
+            delay(150)
+            esperado += 150
+        }
     }
 
     private fun subscribeToBusinessChanges() {
@@ -139,7 +162,7 @@ class BusinessViewModel @Inject constructor(
                     _businessState.value = BusinessUiState.Success(businesses)
                 }
                 .onFailure { error ->
-                    _businessState.value = BusinessUiState.Error(error.message ?: "Error al cargar negocios")
+                    _businessState.value = BusinessUiState.Error(mensajeAmable(error))
                 }
         }
     }
@@ -152,7 +175,7 @@ class BusinessViewModel @Inject constructor(
                     _offersState.value = OffersUiState.Success(offers)
                 }
                 .onFailure { error ->
-                    _offersState.value = OffersUiState.Error(error.message ?: "Error al cargar ofertas")
+                    _offersState.value = OffersUiState.Error(mensajeAmable(error))
                 }
         }
     }
@@ -191,7 +214,7 @@ class BusinessViewModel @Inject constructor(
                     _offersState.value = OffersUiState.Success(offers)
                 }
                 .onFailure { error ->
-                    _offersState.value = OffersUiState.Error(error.message ?: "Error al cargar ofertas")
+                    _offersState.value = OffersUiState.Error(mensajeAmable(error))
                 }
         }
     }
@@ -249,5 +272,24 @@ class BusinessViewModel @Inject constructor(
 
     fun resetReportState() {
         _reportState.value = ReportUiState.Idle
+    }
+
+    /**
+     * Traduce cualquier fallo a un mensaje que una persona pueda entender.
+     *
+     * Antes se pintaba `error.message` tal cual, y eso volcaba en pantalla la
+     * URL completa, las cabeceras y la API key del proyecto: ilegible para el
+     * usuario y una fuga de información innecesaria.
+     */
+    private fun mensajeAmable(error: Throwable): String {
+        val texto = error.message.orEmpty()
+        return when {
+            texto.contains("permission denied", true) ||
+            texto.contains("JWT", true) -> "Tu sesión expiró. Vuelve a iniciar sesión."
+            texto.contains("Unable to resolve host", true) ||
+            texto.contains("timeout", true) ||
+            texto.contains("failed to connect", true) -> "Sin conexión a internet. Revisa tu red."
+            else -> "No se pudieron cargar los datos. Inténtalo de nuevo."
+        }
     }
 }
